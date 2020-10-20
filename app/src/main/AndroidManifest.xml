@@ -24,8 +24,7 @@
         </activity>
 
         <activity
-            android:name=".ScannerActivity"
-            android:theme="@style/noAnimTheme" />
+            android:name=".ScannerActivity" />
 
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"

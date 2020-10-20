@@ -93,8 +93,7 @@ class ViewAdapter(private val dataset: ArrayList<ScanHistoryItem>) :
             if (openIntent.resolveActivity(view.context.packageManager) != null) {
                 view.context.startActivity(openIntent)
             } else {
-                Toast.makeText(view.context, "No apps can open the intent", Toast.LENGTH_SHORT)
-                    .show()
+                Log.i(view.context.packageName, "No apps can open the intent")
             }
         }
     }

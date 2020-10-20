@@ -29,10 +29,13 @@ class MainActivity : AppCompatActivity() {
             .setBeepEnabled(false)
             .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
             .initiateScan()
+
+        overridePendingTransition(0, 0)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
+
         if (hasFocus) {
             startScanner()
         }
@@ -42,16 +45,18 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        Log.d(packageName, resultCode.toString())
+        if (resultCode == 0) {
+            return
+        }
 
         val scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (scanResult != null) {
-            val toastMessage: String = if (scanResult.contents == null) {
+            val logMessage: String = if (scanResult.contents == null) {
                 "Cancelled from fragment"
             } else {
                 "Scanned from fragment: " + scanResult.contents
             }
-            Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
+            Log.i(applicationContext.packageName, logMessage)
         }
 
         saveScanHistoryItem(

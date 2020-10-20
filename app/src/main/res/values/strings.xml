@@ -2,4 +2,6 @@
     <string name="app_name">QScan</string>
     <string name="scan_history_fab">Scan history</string>
     <string name="about_fab">About</string>
+    <string name="scan_history_title">Scan History</string>
+    <string name="empty_scan_history">Scan history is empty!</string>
 </resources>

@@ -2,13 +2,19 @@ package raphtlw.apps.qscan
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Vibrator
+import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.google.zxing.integration.android.IntentIntegrator
+import java.net.URL
+import java.time.Instant
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +38,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        Log.d(packageName, resultCode.toString())
 
         val scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (scanResult != null) {
@@ -44,6 +53,13 @@ class MainActivity : AppCompatActivity() {
             }
             Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
         }
+
+        saveScanHistoryItem(
+            applicationContext,
+            ScanHistoryItem(
+                URL(scanResult.contents).host, scanResult.contents, Instant.now().toString()
+            )
+        )
 
         val openIntent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(scanResult.contents))
         if (openIntent.resolveActivity(packageManager) != null) {

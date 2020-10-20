@@ -1,7 +1,12 @@
 package raphtlw.apps.qscan
 
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.ViewfinderView
@@ -26,6 +31,12 @@ class ScannerActivity : AppCompatActivity() {
         capture.decode()
         viewfinderView.setLaserVisibility(true)
         zxing_barcode_surface.width
+
+        val scanHistoryButton: Button = findViewById(R.id.history_fab)
+        scanHistoryButton.setOnClickListener {
+            val scanHistoryFragment = ScanHistoryFragment()
+            scanHistoryFragment.show(supportFragmentManager, ScanHistoryFragment.TAG)
+        }
     }
 
     override fun onResume() {

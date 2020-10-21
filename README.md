@@ -40,6 +40,11 @@ In addition, you can also contribute by submitting issues. Please describe the i
 
 [More information about contributing](CONTRIBUTING.md)
 
-#### Attribution
+<br>
+<br>
 
-Google Play and the Google Play logo are trademarks of Google LLC.
+<details>
+  <summary>Attributions</summary>
+
+  Google Play and the Google Play logo are trademarks of Google LLC.
+</details>

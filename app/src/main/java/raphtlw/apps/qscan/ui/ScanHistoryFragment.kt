@@ -1,30 +1,27 @@
-package raphtlw.apps.qscan
+package raphtlw.apps.qscan.ui
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
-import android.view.HapticFeedbackConstants
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.ViewFlipper
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_scan_history.*
+import com.google.gson.JsonSyntaxException
+import raphtlw.apps.qscan.R
+import raphtlw.apps.qscan.general.ScanHistoryItem
+import raphtlw.apps.qscan.util.getScanHistoryItems
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.system.exitProcess
 
 class ScanHistoryFragment : BottomSheetDialogFragment() {
     companion object {
@@ -43,7 +40,22 @@ class ScanHistoryFragment : BottomSheetDialogFragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_scan_history, container, false)
 
-        scanHistoryData = getScanHistoryItems(requireContext())
+        try {
+            scanHistoryData = getScanHistoryItems(requireContext())
+        } catch (e: JsonSyntaxException) {
+            Log.i(TAG, e.toString())
+            Toast.makeText(
+                requireContext(),
+                "Please clear the app storage or redownload the app!",
+                Toast.LENGTH_LONG
+            ).show()
+            requireActivity().finishAffinity()
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                this.data = Uri.fromParts("package", requireContext().packageName, null)
+                startActivity(this)
+            }
+            exitProcess(0)
+        }
 
         if (scanHistoryData.isEmpty()) {
             root.findViewById<ViewFlipper>(R.id.scan_history_list_flipper).showNext()
@@ -77,16 +89,19 @@ class ViewAdapter(private val dataset: ArrayList<ScanHistoryItem>) :
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.nameTextView.text = dataset[position].name
         holder.urlTextView.text = dataset[position].link
+//            DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+//                .withLocale(Locale.ENGLISH)
+//                .withZone(ZoneId.systemDefault())
+//                .format()
+//                ?.toString()
         holder.timestampTextView.text =
-            DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
-                .withLocale(Locale.ENGLISH)
-                .withZone(ZoneId.systemDefault())
-                .format(Instant.parse(dataset[position].timestamp))
-                ?.toString()
+            Date(dataset[position].timestamp * 1000L).let {
+                val fmt = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+                fmt.format(it)
+            }
 
         holder.itemView.setOnClickListener { view ->
             val openIntent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(dataset[position].link))

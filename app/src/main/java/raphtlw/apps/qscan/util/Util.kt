@@ -1,8 +1,10 @@
-package raphtlw.apps.qscan
+package raphtlw.apps.qscan.util
 
 import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
+import raphtlw.apps.qscan.general.ScanHistoryItem
+import raphtlw.apps.qscan.general.scanHistoryArrayFromJson
 import java.io.*
 
 fun saveScanHistoryItem(context: Context, item: ScanHistoryItem) {

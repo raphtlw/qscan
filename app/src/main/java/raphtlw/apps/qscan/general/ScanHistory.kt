@@ -1,8 +1,7 @@
-package raphtlw.apps.qscan
+package raphtlw.apps.qscan.general
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.Date
 
 fun scanHistoryFromJson(json: String): ScanHistoryItem = Gson().fromJson(json, ScanHistoryItem::class.java)
 
@@ -12,7 +11,7 @@ fun scanHistoryArrayFromJson(json: String): ArrayList<ScanHistoryItem> =
         object : TypeToken<ArrayList<ScanHistoryItem>>() {}.type
     )
 
-data class ScanHistoryItem(val name: String, val link: String, val timestamp: String) {
+data class ScanHistoryItem(val name: String, val link: String, val timestamp: Long) {
     fun toJson(): String = Gson().toJson(this)
     fun toJsonArray(): String = Gson().toJson(arrayListOf(this))
 }

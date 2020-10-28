@@ -5,9 +5,11 @@
     <color name="colorAccent">#2879fe</color>
     <color name="black">#000000</color>
     <color name="text_light">#FFFFFF</color>
+    <color name="text_dark">#000000</color>
     <!--    <color name="text_lightgrey">#CB646464</color>-->
     <color name="text_grey">#CC444444</color>
     <color name="ripple_color">#34373737</color>
     <color name="splash_screen_background">#2679C6</color>
     <color name="bottom_sheet_handle">#E1E1E1</color>
+    <color name="background_light">#FAFAFA</color>
 </resources>

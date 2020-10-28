@@ -1,7 +1,11 @@
 package raphtlw.apps.qscan.util
 
 import android.content.Context
+import android.content.res.Resources
+import android.text.Html
 import android.util.Log
+import androidx.annotation.StringRes
+import androidx.core.text.HtmlCompat
 import com.google.gson.Gson
 import raphtlw.apps.qscan.general.ScanHistoryItem
 import raphtlw.apps.qscan.general.scanHistoryArrayFromJson
@@ -49,3 +53,6 @@ fun getScanHistoryItems(context: Context): ArrayList<ScanHistoryItem> {
         arrayListOf()
     }
 }
+
+fun Resources.getHtmlString(@StringRes id: Int) =
+    HtmlCompat.fromHtml(getString(id), HtmlCompat.FROM_HTML_MODE_COMPACT)

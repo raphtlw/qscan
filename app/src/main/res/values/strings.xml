@@ -4,4 +4,15 @@
     <string name="about_fab">About</string>
     <string name="scan_history_title">Scan History</string>
     <string name="empty_scan_history">Scan history is empty!</string>
+
+    <string name="about_text">
+        <![CDATA[
+            Designed &amp; developed by <b>raphtlw</b>.
+            <br />
+            <br />
+            This project is <a href="https://github.com/raphtlw/qscan">open source</a>,
+            and licensed under MIT. Check out my
+            <a href="https://play.google.com/store/apps/developer?id=raphtlw">other apps</a>.
+        ]]>
+    </string>
 </resources>

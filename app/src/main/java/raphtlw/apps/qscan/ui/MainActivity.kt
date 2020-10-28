@@ -4,18 +4,19 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
 import android.view.WindowManager
-import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.client.android.BeepManager
 import com.journeyapps.barcodescanner.*
-import kotlinx.android.synthetic.main.activity_main.barcode_scanner
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_scanner.*
 import raphtlw.apps.qscan.R
 import raphtlw.apps.qscan.general.ScanHistoryItem
@@ -55,10 +56,16 @@ class MainActivity : AppCompatActivity() {
         beepManager = BeepManager(this)
         beepManager.isBeepEnabled = false
 
-        val scanHistoryButton: Button = findViewById(R.id.history_fab)
+        val scanHistoryButton: ExtendedFloatingActionButton = findViewById(R.id.history_fab)
         scanHistoryButton.setOnClickListener {
             val scanHistoryFragment = ScanHistoryFragment()
             scanHistoryFragment.show(supportFragmentManager, ScanHistoryFragment.TAG)
+        }
+
+        val aboutButton: FloatingActionButton = findViewById(R.id.about_fab)
+        aboutButton.setOnClickListener {
+            val intent = Intent(this, AboutActivity::class.java)
+            startActivity(intent)
         }
 
         val cameraPermission = checkSelfPermission(Manifest.permission.CAMERA)

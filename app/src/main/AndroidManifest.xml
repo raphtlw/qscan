@@ -4,7 +4,8 @@
     package="raphtlw.apps.qscan">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
     <application
@@ -15,8 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.AboutActivity"></activity>
         <activity android:name=".ui.MainActivity" />
-
         <activity
             android:name=".splash.SplashActivity"
             android:theme="@style/SplashTheme">

@@ -27,7 +27,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginBottom="34dp"
         android:backgroundTint="@color/colorAccent"
-        android:contentDescription="@string/scan_history_fab"
+        android:contentDescription="@string/about_fab"
         app:fabCustomSize="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

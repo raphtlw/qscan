@@ -9,4 +9,5 @@
     <color name="text_grey">#CC444444</color>
     <color name="ripple_color">#34373737</color>
     <color name="splash_screen_background">#2679C6</color>
+    <color name="bottom_sheet_handle">#E1E1E1</color>
 </resources>

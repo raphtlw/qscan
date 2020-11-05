@@ -5,19 +5,20 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.transition.TransitionInflater
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
-import android.view.Window
 import android.view.WindowManager
+import android.webkit.URLUtil
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.client.android.BeepManager
 import com.journeyapps.barcodescanner.*
+import ezvcard.Ezvcard
+import ezvcard.io.CannotParseException
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_scanner.*
 import raphtlw.apps.qscan.R
@@ -90,21 +91,52 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val barcodeCallback = BarcodeCallback { result: BarcodeResult ->
+        Log.i(TAG, "Scan result: ${result.text}")
         val currentTime = System.currentTimeMillis() / 1000L
-        saveScanHistoryItem(
-            applicationContext,
-            ScanHistoryItem(
-                URL(result.text).host, result.text, currentTime
-            )
-        )
 
-        val openIntent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(result.text))
+        val openIntent: Intent
+        val vcard = try {
+            Ezvcard.parse(result.text)
+        } catch (e: CannotParseException) {
+            null
+        }
+
+        if (URLUtil.isValidUrl(result.text)) {
+            saveScanHistoryItem(
+                applicationContext,
+                ScanHistoryItem(
+                    URL(result.text).host, result.text, currentTime
+                )
+            )
+            openIntent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(result.text))
+        } else if (vcard != null) {
+            saveScanHistoryItem(
+                applicationContext,
+                ScanHistoryItem(
+                    "Contact", vcard.first().formattedName.value, currentTime
+                )
+            )
+            openIntent = Intent(ContactsContract.Intents.Insert.ACTION).apply {
+                type = ContactsContract.RawContacts.CONTENT_TYPE
+                // Set email
+                putExtra(ContactsContract.Intents.Insert.EMAIL, vcard.first().emails[0].value)
+                // Set phone number
+                putExtra(ContactsContract.Intents.Insert.PHONE, vcard.first().telephoneNumbers[0].text)
+            }
+        } else {
+            openIntent = Intent()
+        }
+
         if (openIntent.resolveActivity(packageManager) != null) {
             window.decorView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             startActivity(openIntent)
         } else {
-            Toast.makeText(this, "No apps are able to open the scanned item", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(
+                applicationContext,
+                "No apps are able to open the scanned item",
+                Toast.LENGTH_SHORT
+            ).show()
+            Log.i(TAG, "No apps can open the intent")
         }
     }
 

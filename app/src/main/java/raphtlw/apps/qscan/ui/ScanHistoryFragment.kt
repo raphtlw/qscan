@@ -8,21 +8,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-import android.widget.ViewFlipper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.JsonSyntaxException
-import kotlinx.android.synthetic.main.fragment_scan_history.*
 import kotlinx.android.synthetic.main.fragment_scan_history.view.*
 import raphtlw.apps.qscan.R
 import raphtlw.apps.qscan.general.ScanHistoryItem
 import raphtlw.apps.qscan.util.getScanHistoryItems
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
 class ScanHistoryFragment : BottomSheetDialogFragment() {
@@ -63,7 +57,10 @@ class ScanHistoryFragment : BottomSheetDialogFragment() {
         if (scanHistoryData.isEmpty()) {
             root.scan_history_list_flipper.showNext()
         } else {
-            scanHistoryContainerManager = LinearLayoutManager(context)
+            scanHistoryContainerManager = LinearLayoutManager(context).apply {
+                reverseLayout = true
+                stackFromEnd = true
+            }
             scanHistoryContainerAdapter = ScanHistoryContainerAdapter(scanHistoryData)
             scanHistoryContainer = root.scan_history_list.apply {
                 setHasFixedSize(true)

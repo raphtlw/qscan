@@ -11,8 +11,7 @@ fun scanHistoryArrayFromJson(json: String): ArrayList<ScanHistoryItem> =
         object : TypeToken<ArrayList<ScanHistoryItem>>() {}.type
     )
 
-data class ScanHistoryItem(val name: String, val link: String, val timestamp: Long) {
+data class ScanHistoryItem(val name: String, val content: String, val timestamp: Long) {
     fun toJson(): String = Gson().toJson(this)
     fun toJsonArray(): String = Gson().toJson(arrayListOf(this))
-
 }

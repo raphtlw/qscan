@@ -2,7 +2,6 @@ package raphtlw.apps.qscan.util
 
 import android.content.Context
 import android.content.res.Resources
-import android.text.Html
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.core.text.HtmlCompat

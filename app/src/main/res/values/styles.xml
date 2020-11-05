@@ -39,4 +39,9 @@
         <item name="android:focusable">true</item>
     </style>
 
+    <style name="BottomDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/bottom_up</item>
+        <item name="android:windowExitAnimation">@anim/bottom_down</item>
+    </style>
+
 </resources>

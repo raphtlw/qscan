@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.JsonSyntaxException
+import kotlinx.android.synthetic.main.fragment_scan_history.*
+import kotlinx.android.synthetic.main.fragment_scan_history.view.*
 import raphtlw.apps.qscan.R
 import raphtlw.apps.qscan.general.ScanHistoryItem
 import raphtlw.apps.qscan.util.getScanHistoryItems
@@ -24,13 +26,14 @@ import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
 class ScanHistoryFragment : BottomSheetDialogFragment() {
+
     companion object {
         const val TAG = "ScanHistoryFragment"
     }
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
+    private lateinit var scanHistoryContainer: RecyclerView
+    private lateinit var scanHistoryContainerAdapter: RecyclerView.Adapter<*>
+    private lateinit var scanHistoryContainerManager: RecyclerView.LayoutManager
     private lateinit var scanHistoryData: ArrayList<ScanHistoryItem>
 
     override fun onCreateView(
@@ -58,60 +61,22 @@ class ScanHistoryFragment : BottomSheetDialogFragment() {
         }
 
         if (scanHistoryData.isEmpty()) {
-            root.findViewById<ViewFlipper>(R.id.scan_history_list_flipper).showNext()
+            root.scan_history_list_flipper.showNext()
         } else {
-            viewManager = LinearLayoutManager(context)
-            viewAdapter = ViewAdapter(scanHistoryData)
-            recyclerView = root.findViewById<RecyclerView>(R.id.scan_history_list).apply {
+            scanHistoryContainerManager = LinearLayoutManager(context)
+            scanHistoryContainerAdapter = ScanHistoryContainerAdapter(scanHistoryData)
+            scanHistoryContainer = root.scan_history_list.apply {
                 setHasFixedSize(true)
-                layoutManager = viewManager
-                adapter = viewAdapter
+                layoutManager = scanHistoryContainerManager
+                adapter = scanHistoryContainerAdapter
             }
         }
 
         return root
     }
-}
 
-class ViewAdapter(private val dataset: ArrayList<ScanHistoryItem>) :
-    RecyclerView.Adapter<ViewAdapter.ViewHolder>() {
-
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val nameTextView: TextView = view.findViewById(R.id.scan_history_item_name)
-        val urlTextView: TextView = view.findViewById(R.id.scan_history_item_url)
-        val timestampTextView: TextView = view.findViewById(R.id.scan_history_item_timestamp)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        dialog?.window?.attributes?.windowAnimations = R.style.BottomDialogAnimation
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.scan_history_item, parent, false)
-        )
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.nameTextView.text = dataset[position].name
-        holder.urlTextView.text = dataset[position].link
-//            DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
-//                .withLocale(Locale.ENGLISH)
-//                .withZone(ZoneId.systemDefault())
-//                .format()
-//                ?.toString()
-        holder.timestampTextView.text =
-            Date(dataset[position].timestamp * 1000L).let {
-                val fmt = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-                fmt.format(it)
-            }
-
-        holder.itemView.setOnClickListener { view ->
-            val openIntent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(dataset[position].link))
-            if (openIntent.resolveActivity(view.context.packageManager) != null) {
-                view.context.startActivity(openIntent)
-            } else {
-                Log.i(view.context.packageName, "No apps can open the intent")
-            }
-        }
-    }
-
-    override fun getItemCount() = dataset.size
 }

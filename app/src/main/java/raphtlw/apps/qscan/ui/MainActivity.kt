@@ -5,9 +5,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
+import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -62,10 +64,9 @@ class MainActivity : AppCompatActivity() {
             scanHistoryFragment.show(supportFragmentManager, ScanHistoryFragment.TAG)
         }
 
-        val aboutButton: FloatingActionButton = findViewById(R.id.about_fab)
-        aboutButton.setOnClickListener {
-            val intent = Intent(this, AboutActivity::class.java)
-            startActivity(intent)
+        more_fab.setOnClickListener {
+            startActivity(Intent(this, MoreActivity::class.java))
+            overridePendingTransition(R.anim.bottom_up, 0)
         }
 
         val cameraPermission = checkSelfPermission(Manifest.permission.CAMERA)

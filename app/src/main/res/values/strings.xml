@@ -2,6 +2,7 @@
     <string name="app_name">QScan</string>
     <string name="scan_history_fab">Scan history</string>
     <string name="about_fab">About</string>
+    <string name="more_fab">More</string>
     <string name="scan_history_title">Scan History</string>
     <string name="empty_scan_history">Scan history is empty!</string>
 
@@ -15,4 +16,6 @@
             <a href="https://play.google.com/store/apps/developer?id=raphtlw">other apps</a>.
         ]]>
     </string>
+
+    <string name="more_header">More</string>
 </resources>

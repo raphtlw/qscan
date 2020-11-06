@@ -22,7 +22,7 @@ import ezvcard.io.CannotParseException
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_scanner.*
 import raphtlw.apps.qscan.R
-import raphtlw.apps.qscan.general.ScanHistoryItem
+import raphtlw.apps.qscan.general.ScanHistory
 import raphtlw.apps.qscan.util.saveScanHistoryItem
 import java.net.URL
 
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         if (URLUtil.isValidUrl(result.text)) {
             saveScanHistoryItem(
                 applicationContext,
-                ScanHistoryItem(
+                ScanHistory(
                     URL(result.text).host, result.text, currentTime
                 )
             )
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         } else if (vcard != null) {
             saveScanHistoryItem(
                 applicationContext,
-                ScanHistoryItem(
+                ScanHistory(
                     "Contact", vcard.first().formattedName.value, currentTime
                 )
             )

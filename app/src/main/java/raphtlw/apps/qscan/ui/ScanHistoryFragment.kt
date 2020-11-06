@@ -15,7 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.JsonSyntaxException
 import kotlinx.android.synthetic.main.fragment_scan_history.view.*
 import raphtlw.apps.qscan.R
-import raphtlw.apps.qscan.general.ScanHistoryItem
+import raphtlw.apps.qscan.general.ScanHistory
 import raphtlw.apps.qscan.util.getScanHistoryItems
 import kotlin.system.exitProcess
 
@@ -28,7 +28,7 @@ class ScanHistoryFragment : BottomSheetDialogFragment() {
     private lateinit var scanHistoryContainer: RecyclerView
     private lateinit var scanHistoryContainerAdapter: RecyclerView.Adapter<*>
     private lateinit var scanHistoryContainerManager: RecyclerView.LayoutManager
-    private lateinit var scanHistoryData: ArrayList<ScanHistoryItem>
+    private lateinit var scanHistoryData: ArrayList<ScanHistory>
 
     override fun onCreateView(
         inflater: LayoutInflater,

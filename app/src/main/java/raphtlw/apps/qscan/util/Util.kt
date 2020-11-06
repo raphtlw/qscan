@@ -6,11 +6,10 @@ import android.util.Log
 import androidx.annotation.StringRes
 import androidx.core.text.HtmlCompat
 import com.google.gson.Gson
-import raphtlw.apps.qscan.general.ScanHistoryItem
-import raphtlw.apps.qscan.general.scanHistoryArrayFromJson
+import raphtlw.apps.qscan.general.ScanHistory
 import java.io.*
 
-fun saveScanHistoryItem(context: Context, item: ScanHistoryItem) {
+fun saveScanHistoryItem(context: Context, item: ScanHistory) {
     val filePath = "${context.filesDir.absolutePath}/scan_history.json"
     Log.i(context.packageName, filePath)
     val file = File(filePath)
@@ -18,7 +17,7 @@ fun saveScanHistoryItem(context: Context, item: ScanHistoryItem) {
     if (file.exists()) {
         Log.i(context.packageName, "File already exists")
         val fileJsonString = BufferedReader(FileReader(file)).readLines().joinToString("\n")
-        val fileJson = scanHistoryArrayFromJson(fileJsonString)
+        val fileJson = ScanHistory.fromJsonArray(fileJsonString)
 
         fileJson.add(item)
         val newFileJsonString = Gson().toJson(fileJson)
@@ -40,14 +39,14 @@ fun saveScanHistoryItem(context: Context, item: ScanHistoryItem) {
     Log.i(context.packageName, "Scan history item saved to file")
 }
 
-fun getScanHistoryItems(context: Context): ArrayList<ScanHistoryItem> {
+fun getScanHistoryItems(context: Context): ArrayList<ScanHistory> {
     val filePath = "${context.filesDir.absolutePath}/scan_history.json"
     Log.i(context.packageName, filePath)
     val file = File(filePath)
 
     return if (file.exists()) {
         val fileJsonString = BufferedReader(FileReader(file)).readLines().joinToString("\n")
-        scanHistoryArrayFromJson(fileJsonString)
+        ScanHistory.fromJsonArray(fileJsonString)
     } else {
         arrayListOf()
     }

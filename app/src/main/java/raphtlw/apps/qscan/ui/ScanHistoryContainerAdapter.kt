@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import ezvcard.Ezvcard
 import ezvcard.io.CannotParseException
 import raphtlw.apps.qscan.R
-import raphtlw.apps.qscan.general.ScanHistoryItem
+import raphtlw.apps.qscan.general.ScanHistory
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ScanHistoryContainerAdapter(private val dataset: ArrayList<ScanHistoryItem>) :
+class ScanHistoryContainerAdapter(private val dataset: ArrayList<ScanHistory>) :
     RecyclerView.Adapter<ScanHistoryContainerAdapter.ViewHolder>() {
 
     companion object {

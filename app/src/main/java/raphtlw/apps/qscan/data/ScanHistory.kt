@@ -9,7 +9,7 @@ import raphtlw.apps.qscan.util.Logger
 import java.io.*
 
 @JsonClass(generateAdapter = true)
-data class ScanHistory(val name: String, val content: String, val timestamp: Long) {
+data class ScanHistory(val content: String, val name: String, val timestamp: Long) {
 
     fun toJson(): String {
         val moshi = Moshi.Builder().build()

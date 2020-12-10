@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.Settings
 import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
 import android.view.WindowManager
@@ -17,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.client.android.BeepManager
 import com.journeyapps.barcodescanner.*
+import com.squareup.moshi.JsonDataException
 import ezvcard.Ezvcard
 import ezvcard.io.CannotParseException
 import raphtlw.apps.qscan.R
@@ -24,6 +26,7 @@ import raphtlw.apps.qscan.data.ScanHistory
 import raphtlw.apps.qscan.databinding.ActivityMainBinding
 import raphtlw.apps.qscan.util.Logger
 import java.net.URL
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
 
@@ -103,19 +106,34 @@ class MainActivity : AppCompatActivity() {
 
         when {
             URLUtil.isValidUrl(result.text) -> {
-                ScanHistory.saveScanHistoryItem(
-                    applicationContext,
-                    ScanHistory(
-                        URL(result.text).host, result.text, currentTime
+                try {
+                    ScanHistory.saveScanHistoryItem(
+                        applicationContext,
+                        ScanHistory(
+                            result.text, URL(result.text).host, currentTime
+                        )
                     )
-                )
+                } catch (e: JsonDataException) {
+                    log.i(e.toString())
+                    Toast.makeText(
+                        applicationContext,
+                        "Please clear the app storage or redownload the app!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    this.finishAffinity()
+                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        this.data = Uri.fromParts("package", applicationContext.packageName, null)
+                        startActivity(this)
+                    }
+                    exitProcess(0)
+                }
                 openIntent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(result.text))
             }
             vcard != null -> {
                 ScanHistory.saveScanHistoryItem(
                     applicationContext,
                     ScanHistory(
-                        "Contact", vcard.first().formattedName.value, currentTime
+                        vcard.first().formattedName.value, "Contact", currentTime
                     )
                 )
                 openIntent = Intent(ContactsContract.Intents.Insert.ACTION).apply {

@@ -61,18 +61,28 @@ class ScanHistoryContainerAdapter(private val dataset: ArrayList<ScanHistory>) :
                 null
             }
 
-            if (URLUtil.isValidUrl(content)) {
-                openIntent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(content))
-            } else if (vcard != null) {
-                openIntent = Intent(ContactsContract.Intents.Insert.ACTION).apply {
-                    type = ContactsContract.RawContacts.CONTENT_TYPE
-                    // Set email
-                    putExtra(ContactsContract.Intents.Insert.EMAIL, vcard.first().emails[0].value)
-                    // Set phone number
-                    putExtra(ContactsContract.Intents.Insert.PHONE, vcard.first().telephoneNumbers[0].text)
+            when {
+                URLUtil.isValidUrl(content) -> {
+                    openIntent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(content))
                 }
-            } else {
-                openIntent = Intent()
+                vcard != null -> {
+                    openIntent = Intent(ContactsContract.Intents.Insert.ACTION).apply {
+                        type = ContactsContract.RawContacts.CONTENT_TYPE
+                        // Set email
+                        putExtra(
+                            ContactsContract.Intents.Insert.EMAIL,
+                            vcard.first().emails[0].value
+                        )
+                        // Set phone number
+                        putExtra(
+                            ContactsContract.Intents.Insert.PHONE,
+                            vcard.first().telephoneNumbers[0].text
+                        )
+                    }
+                }
+                else -> {
+                    openIntent = Intent()
+                }
             }
 
             if (openIntent.resolveActivity(view.context.packageManager) != null) {

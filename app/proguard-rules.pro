@@ -27,3 +27,6 @@
     public *** w(...);
     public *** e(...);
 }
+
+-keep,includedescriptorclasses class ezvcard.* { *; }
+-keepclassmembers class ezvcard.* { *; }

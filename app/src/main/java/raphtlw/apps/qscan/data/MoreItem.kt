@@ -1,4 +1,4 @@
-package raphtlw.apps.qscan.general
+package raphtlw.apps.qscan.data
 
 import android.view.View
 

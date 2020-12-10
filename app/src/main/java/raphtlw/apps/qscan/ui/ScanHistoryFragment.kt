@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,19 +11,17 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.gson.JsonSyntaxException
-import kotlinx.android.synthetic.main.fragment_scan_history.view.*
+import com.squareup.moshi.JsonDataException
 import raphtlw.apps.qscan.R
-import raphtlw.apps.qscan.general.ScanHistory
-import raphtlw.apps.qscan.util.getScanHistoryItems
+import raphtlw.apps.qscan.data.ScanHistory
+import raphtlw.apps.qscan.databinding.FragmentScanHistoryBinding
+import raphtlw.apps.qscan.util.Logger
 import kotlin.system.exitProcess
 
 class ScanHistoryFragment : BottomSheetDialogFragment() {
 
-    companion object {
-        const val TAG = "ScanHistoryFragment"
-    }
-
+    private var _binding: FragmentScanHistoryBinding? = null
+    private val binding get() = _binding!!
     private lateinit var scanHistoryContainer: RecyclerView
     private lateinit var scanHistoryContainerAdapter: RecyclerView.Adapter<*>
     private lateinit var scanHistoryContainerManager: RecyclerView.LayoutManager
@@ -34,13 +31,15 @@ class ScanHistoryFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val root = inflater.inflate(R.layout.fragment_scan_history, container, false)
+    ): View {
+        _binding = FragmentScanHistoryBinding.inflate(inflater, container, false)
+        val view = binding.root
+        val log = Logger(this.javaClass)
 
         try {
-            scanHistoryData = getScanHistoryItems(requireContext())
-        } catch (e: JsonSyntaxException) {
-            Log.i(TAG, e.toString())
+            scanHistoryData = ScanHistory.getScanHistoryItems(requireContext())
+        } catch (e: JsonDataException) {
+            log.i(e.toString())
             Toast.makeText(
                 requireContext(),
                 "Please clear the app storage or redownload the app!",
@@ -55,21 +54,26 @@ class ScanHistoryFragment : BottomSheetDialogFragment() {
         }
 
         if (scanHistoryData.isEmpty()) {
-            root.scan_history_list_flipper.showNext()
+            binding.scanHistoryListFlipper.showNext()
         } else {
             scanHistoryContainerManager = LinearLayoutManager(context).apply {
                 reverseLayout = true
                 stackFromEnd = true
             }
             scanHistoryContainerAdapter = ScanHistoryContainerAdapter(scanHistoryData)
-            scanHistoryContainer = root.scan_history_list.apply {
+            scanHistoryContainer = binding.scanHistoryList.apply {
                 setHasFixedSize(true)
                 layoutManager = scanHistoryContainerManager
                 adapter = scanHistoryContainerAdapter
             }
         }
 
-        return root
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

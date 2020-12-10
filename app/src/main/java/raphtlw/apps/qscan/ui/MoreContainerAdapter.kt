@@ -1,25 +1,25 @@
 package raphtlw.apps.qscan.ui
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.more_item.view.*
-import raphtlw.apps.qscan.R
-import raphtlw.apps.qscan.general.MoreItem
+import raphtlw.apps.qscan.data.MoreItem
+import raphtlw.apps.qscan.databinding.MoreItemBinding
 
 class MoreContainerAdapter(private val dataset: Array<MoreItem>) : RecyclerView.Adapter<MoreContainerAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    private lateinit var binding: MoreItemBinding
+
+    inner class ViewHolder(binding: MoreItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.more_item, parent, false)
-        return ViewHolder(view)
+        binding = MoreItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemView.item_name.text = dataset[position].name
-        holder.itemView.setOnClickListener(dataset[position].onClick)
+        binding.itemName.text = dataset[position].name
+        binding.root.setOnClickListener(dataset[position].onClick)
     }
 
     override fun getItemCount() = dataset.size

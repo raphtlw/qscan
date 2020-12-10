@@ -20,10 +20,10 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--assumenosideeffects class android.util.Log {
-    public static *** d(...);
-    public static *** v(...);
-    public static *** i(...);
-    public static *** w(...);
-    public static *** e(...);
+-assumenosideeffects class raphtlw.apps.qscan.util.Logger {
+    public *** d(...);
+    public *** v(...);
+    public *** i(...);
+    public *** w(...);
+    public *** e(...);
 }

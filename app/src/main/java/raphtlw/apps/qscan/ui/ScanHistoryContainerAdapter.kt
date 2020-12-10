@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ezvcard.Ezvcard
 import ezvcard.io.CannotParseException
 import raphtlw.apps.qscan.R
-import raphtlw.apps.qscan.general.ScanHistory
+import raphtlw.apps.qscan.data.ScanHistory
 import java.text.SimpleDateFormat
 import java.util.*
 
